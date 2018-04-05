@@ -1,19 +1,42 @@
 
 import React, { Component } from 'react';
 import Foto from './Foto';
-import {Redirect} from 'react-router-dom';
 
 export default class Timeline extends Component {
 
-    constructor() {
+    constructor(props) {
 
-        super();
+        super(props);
         this.state = {fotosLista: []};
+        this.login = this.props.login;
     }
 
     componentDidMount() {
 
-        fetch(`https://instalura-api.herokuapp.com//api/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`)
+        this.carregaFotos();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        
+        if(nextProps.login !== undefined) {
+            this.login = nextProps.login;
+            this.carregaFotos();
+        }
+    }
+    
+    carregaFotos() {
+
+        let urlPerfil;
+
+        if(this.login === undefined) {
+
+            urlPerfil = `https://instalura-api.herokuapp.com//api/fotos?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`;
+        } else {
+
+            urlPerfil = `https://instalura-api.herokuapp.com//api/public/fotos/${this.login}`;
+        }
+
+        fetch(urlPerfil)
 
             .then(response => response.json())
             .then(fotosLista => {
@@ -29,7 +52,7 @@ export default class Timeline extends Component {
                     this.state.fotosLista.map(fotoItem => {
 
                         return (
-                            <Foto fotoItem={fotoItem} />
+                            <Foto key={fotoItem.id} fotoItem={fotoItem} />
                         );
                     })
                 }

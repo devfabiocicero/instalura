@@ -3,21 +3,29 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Login from './componentes/Login';
 import registerServiceWorker from './registerServiceWorker';
-import {BrowserRouter as Router, Route, Redirect} from  'react-router-dom';
+import {BrowserRouter as Router, Route, Redirect, matchPath} from  'react-router-dom';
 import './css/reset.css';
 import './css/timeline.css';
 import './css/login.css';
 
-function verificaAutenticacao() {
+function verificaAutenticacao(nextState, replace) {
 
-    if(localStorage.getItem('auth-token') === null) {
+    const resultado = matchPath('/timeline', {
+        
+        path: nextState.match.url,
+        exact: true
+    });
+
+    const enderecoPrivadoTimeline = resultado !== null;
+
+    if(enderecoPrivadoTimeline && localStorage.getItem('auth-token') === null) {
 
         return <Redirect to={{
                     pathname: '/'
                 }}/>
     } else {
 
-        return <App />
+        return <App login={nextState.match.params.login} />
     }
 }
 
@@ -35,7 +43,7 @@ ReactDOM.render(
         <Router>
             <div>
                 <Route exact path="/" component={Login} />
-                <Route path="/timeline" render={verificaAutenticacao} />
+                <Route path="/timeline/:login?" render={verificaAutenticacao} />
                 <Route path="/logout" render={Logout} />
             </div>
         </Router>
