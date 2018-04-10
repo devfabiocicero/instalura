@@ -12,7 +12,7 @@ class App extends Component {
             <div className="main">
               <Header />
               <Timeline login={this.props.login} />
-			    </div>
+			      </div>
         </div>
     );
   }
