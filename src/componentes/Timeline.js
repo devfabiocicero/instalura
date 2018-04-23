@@ -14,9 +14,9 @@ export default class Timeline extends Component {
 
     componentWillMount() {
 
-        this.props.store.subscribe(fotos => {
+        this.props.store.subscribe(() => {
 
-            this.setState({fotosLista: fotos});
+            this.setState({fotosLista: this.props.store.getState()});
         });
     }
 
@@ -45,17 +45,17 @@ export default class Timeline extends Component {
             urlPerfil = `https://instalura-api.herokuapp.com//api/public/fotos/${this.login}`;
         }
 
-        this.props.store.lista(urlPerfil);
+        // this.props.store.lista(urlPerfil);
     }
 
     like(fotoId) {
 
-        this.props.store.like(fotoId);
+        // this.props.store.like(fotoId);
     }
 
     processaComentario(fotoId, comentario) {
 
-        this.props.store.comentario(fotoId, comentario);
+        // this.props.store.comentario(fotoId, comentario);
     }
 
     render() {
