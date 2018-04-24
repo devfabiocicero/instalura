@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import Header from './componentes/Header';
 import Timeline from './componentes/Timeline';
 import TimelineStore from './logicas/TimelineStore';
-import {createStore} from '.redux';
+import {createStore} from 'redux';
 
 // const logicaTimeline = new TimelineStore([]);
 
-function timeline(state, action) {
+function timeline(state=[], action) {
 
     if(action.type === 'LISTAGEM') {
 
-        return state;
+        console.log('entrou na listagem');
+        return action.fotos;
     }
 
     return state;
@@ -28,7 +29,7 @@ class App extends Component {
             <div className="main">
               <Header />
               <Timeline login={this.props.login} store={store} />
-			      </div>
+			</div>
         </div>
     );
   }
