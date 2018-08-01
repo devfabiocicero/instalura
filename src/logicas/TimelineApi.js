@@ -1,22 +1,21 @@
 
 import PubSub from 'pubsub-js';
 
-export default class logicaTimeline {
+export default class TimelineApi {
 
     constructor(fotos) {
 
         this.fotosLista = fotos;
     }
 
-    lista(urlPerfil) {
+    static lista(urlPerfil, store) {
 
         fetch(urlPerfil)
 
             .then(response => response.json())
             .then(fotosLista => {
 
-                this.fotosLista = fotosLista;
-                PubSub.publish('timeline', fotosLista);
+                store.dispatch({ type: 'LISTAGEM', fotos: fotosLista });
             });
     }
 
