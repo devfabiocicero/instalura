@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import Header from './componentes/Header';
 import Timeline from './componentes/Timeline';
 import { timeline } from './reducers/timeline';
-import { createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
 
-const store = createStore(timeline);
+const store = createStore(timeline, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
 
