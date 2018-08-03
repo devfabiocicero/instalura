@@ -1,12 +1,5 @@
 
-import PubSub from 'pubsub-js';
-
 export default class TimelineApi {
-
-    constructor(fotos) {
-
-        this.fotosLista = fotos;
-    }
 
     static lista(urlPerfil) {
 
@@ -15,18 +8,20 @@ export default class TimelineApi {
             fetch(urlPerfil)
 
                 .then(response => response.json())
-                .then(fotosLista => {
+                .then(fotos => {
 
-                    dispatch({ type: 'LISTAGEM', fotos: fotosLista });
-                    return fotosLista;
+                    dispatch({ type: 'LISTAGEM', fotos });
+                    return fotos;
                 });
         }
     }
 
-    like(fotoId) {
+    static like(fotoId) {
 
-        fetch(`https://instalura-api.herokuapp.com//api/fotos/${fotoId}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
-            
+        return dispatch => {
+
+            fetch(`https://instalura-api.herokuapp.com//api/fotos/${fotoId}/like?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`,
+                
                 {
                     method: 'POST'
                 })
@@ -45,61 +40,42 @@ export default class TimelineApi {
                 })
 
                 .then(liker => {    
+                    dispatch({ type: 'LIKE', fotoId, liker })
+                    return liker;
+                })
+        }
+    }
 
-                    const fotoAchada = this.fotosLista.find(foto => foto.id === fotoId);
+    static comentario(fotoId, comentario) {
 
-                    const possivelLiker = fotoAchada.likers.find(likerAtual => likerAtual.login === liker.login);
-                    
-                    if(possivelLiker === undefined) {
+        return dispatch => {
 
-                        fotoAchada.likers.push(liker);
+            const requestInfo = {
+
+                method: 'POST',
+                body: JSON.stringify({texto: comentario}),
+                headers: new Headers({
+                    'Content-type': 'application/json'
+                })
+            };
+
+            fetch(`https://instalura-api.herokuapp.com//api/fotos/${fotoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
+
+                .then(response => {
+
+                    if(response.ok) {
+
+                        return response.json();
                     } else {
 
-                        fotoAchada.likers.filter(likerAtual => likerAtual.login !== liker.login);
+                        throw new Error('Não foi possível comentar');
                     }
-
-                    fotoAchada.likeada = !fotoAchada.likeada;
-                    
-                    PubSub.publish('timeline', this.fotosLista);
                 })
-    }
 
-    comentario(fotoId, comentario) {
-
-        const requestInfo = {
-
-            method: 'POST',
-            body: JSON.stringify({texto: comentario}),
-            headers: new Headers({
-                'Content-type': 'application/json'
-            })
-        };
-
-        fetch(`https://instalura-api.herokuapp.com//api/fotos/${fotoId}/comment?X-AUTH-TOKEN=${localStorage.getItem('auth-token')}`, requestInfo)
-
-            .then(response => {
-
-                if(response.ok) {
-
-                    return response.json();
-                } else {
-
-                    throw new Error('Não foi possível comentar');
-                }
-            })
-
-            .then(comentario => {
-                const fotoAchada = this.fotosLista.find(foto => foto.id === fotoId);
-                fotoAchada.comentarios.push(comentario);
-                PubSub.publish('timeline', this.fotosLista);
-            })
-    }
-
-    subscribe(callback) {
-
-        PubSub.subscribe('timeline', (topico, fotos) => {
-
-            callback(fotos);
-        });
+                .then(comentario => {
+                    dispatch({ type: 'COMENTARIO', fotoId, comentario });
+                    return comentario;
+                })
+        }
     }
 }
