@@ -3,7 +3,11 @@
   <br>
   <a href="http://linkedin.com/devfabiocicero"><img src="instalura-cover.png" alt="Instalura"></a>
   <br>
+  Instalura
+  <br>
 </h1>
+
+<h4 align="center">Instalura</h4>
 
 <p align="center">
   <a href="#how-to-use">How To Use</a> •
