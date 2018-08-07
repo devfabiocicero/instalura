@@ -1,3 +1,4 @@
+import { like, lista, comenta } from '../actions/actionCreator';
 
 export default class TimelineApi {
 
@@ -10,7 +11,7 @@ export default class TimelineApi {
                 .then(response => response.json())
                 .then(fotos => {
 
-                    dispatch({ type: 'LISTAGEM', fotos });
+                    dispatch(lista(fotos));
                     return fotos;
                 });
         }
@@ -40,7 +41,7 @@ export default class TimelineApi {
                 })
 
                 .then(liker => {    
-                    dispatch({ type: 'LIKE', fotoId, liker })
+                    dispatch(like(fotoId, liker));
                     return liker;
                 })
         }
@@ -73,9 +74,39 @@ export default class TimelineApi {
                 })
 
                 .then(comentario => {
-                    dispatch({ type: 'COMENTARIO', fotoId, comentario });
+                    dispatch(comenta(fotoId, comentario));
                     return comentario;
                 })
+        }
+    }
+
+    static pesquisa(login) {
+        return dispatch => {
+            fetch(`https://instalura-api.herokuapp.com//api/public/fotos/${login}`)
+
+                .then(response =>{
+
+                    if(response.ok) {
+
+                        return response.json();
+                    } else {
+
+                        throw new Error('Não foi possível pesquisar o usuário');
+                    }
+                })
+
+                .then(fotos => {
+                    
+                    if(fotos.length === 0) {
+                        dispatch({ type: 'ALERT', msg: 'Usuário não encontrado!' });
+                    } else {
+                        dispatch({ type: 'ALERT', msg: '' });
+                    }
+
+                    dispatch({ type: 'LISTAGEM', fotos });
+                })
+
+                .catch(() => dispatch({ type: 'ALERT', msg: 'Usuário não encontrado!' }));
         }
     }
 }

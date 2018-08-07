@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import Header from './componentes/Header';
 import Timeline from './componentes/Timeline';
 import { timeline } from './reducers/timeline';
+import { header } from './reducers/header';
 import thunkMiddleware from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
 
-const store = createStore(timeline, applyMiddleware(thunkMiddleware));
+const reducers = combineReducers({ timeline, header });
+const store = createStore(reducers, applyMiddleware(thunkMiddleware));
 
 class App extends Component {
 
@@ -15,7 +17,7 @@ class App extends Component {
 
 			<div id="root">
 				<div className="main">
-					<Header />
+					<Header store={store} />
 					<Timeline login={this.props.login} store={store} />
 				</div>
 			</div>

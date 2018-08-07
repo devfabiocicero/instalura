@@ -1,29 +1,25 @@
 
 import React, { Component } from 'react';
-import PubSub from 'pubsub-js';
+import TimelineApi from '../logicas/TimelineApi';
 
 export default class Header extends Component {
+
+    constructor() {
+        super();
+        this.state = { msg: '' };
+    }
+
+    componentDidMount() {
+        this.props.store.subscribe(() => {
+            this.setState({ msg: this.props.store.getState().header });
+        });
+    }
 
     pesquisa(ev) {
 
         ev.preventDefault();
-        fetch(`https://instalura-api.herokuapp.com//api/public/fotos/${this.loginPesquisado.value}`)
-
-            .then(response =>{
-
-                if(response.ok) {
-
-                    return response.json();
-                } else {
-
-                    throw new Error('Não foi possível pesquisar o usuário');
-                }
-            })
-
-            .then(fotos => {
-                
-                PubSub.publish('timeline', fotos);
-            });
+        console.log(this.loginPesquisado.value);
+        this.props.store.dispatch(TimelineApi.pesquisa(this.loginPesquisado.value));
     }
     
     render() {
@@ -36,6 +32,7 @@ export default class Header extends Component {
                 <form onSubmit={this.pesquisa.bind(this)} className="header-busca">
                 <input ref={input => this.loginPesquisado = input} type="text" name="search" placeholder="Pesquisa" className="header-busca-campo"/>
                 <input type="submit" value="Buscar" className="header-busca-submit"/>
+                <span>{this.state.msg}</span>
                 </form>
 
 

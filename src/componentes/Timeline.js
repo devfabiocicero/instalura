@@ -17,7 +17,7 @@ export default class Timeline extends Component {
 
 		this.props.store.subscribe(() => {
 
-			this.setState({ fotosLista: this.props.store.getState() });
+			this.setState({ fotosLista: this.props.store.getState().timeline });
 		});
 	}
 
