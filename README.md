@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="http://linkedin.com/devfabiocicero"><img src="instalura-cover.png" alt="Instalura" width="500"></a>
+  <a href="http://linkedin.com/devfabiocicero"><img src="instalura-cover.png" alt="Instalura"></a>
   <br>
 </h1>
 
