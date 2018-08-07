@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-  <a href="http://linkedin.com/devfabiocicero"><img src="instalura-cover.png" alt="Instalura"></a>
+  <a href="https://www.linkedin.com/in/devfabiocicero/"><img src="instalura-cover.png" alt="Instalura"></a>
   <br>
   Instalura
   <br>
@@ -46,5 +46,5 @@ MIT
 
 ---
 
-> Linkedin [@devfabiocicero](http://linkedin.com/devfabiocicero) &nbsp;&middot;&nbsp;
+> Linkedin [@devfabiocicero](https://www.linkedin.com/in/devfabiocicero/) &nbsp;&middot;&nbsp;
 > GitHub [@devfabiocicero](https://github.com/devfabiocicero) &nbsp;&middot;&nbsp;
