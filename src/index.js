@@ -8,6 +8,15 @@ import './css/reset.css';
 import './css/timeline.css';
 import './css/login.css';
 
+import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import { Provider } from 'react-redux';
+import { timeline } from './reducers/timeline';
+import { header } from './reducers/header';
+
+const reducers = combineReducers({ timeline, header });
+const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+
 function verificaAutenticacao(nextState, replace) {
 
     const resultado = matchPath('/timeline', {
@@ -40,13 +49,15 @@ function Logout() {
 
 ReactDOM.render(
     (
-        <Router>
-            <div>
-                <Route exact path="/" component={Login} />
-                <Route path="/timeline/:login?" render={verificaAutenticacao} />
-                <Route path="/logout" render={Logout} />
-            </div>
-        </Router>
+        <Provider store={store}>
+            <Router>
+                <div>
+                    <Route exact path="/" component={Login} />
+                    <Route path="/timeline/:login?" render={verificaAutenticacao} />
+                    <Route path="/logout" render={Logout} />
+                </div>
+            </Router>
+        </Provider>
     ),
     document.getElementById('root')
 );
