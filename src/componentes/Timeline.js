@@ -3,22 +3,14 @@ import React, { Component } from 'react';
 import Foto from './Foto';
 import ReactCSSTransitionGroup from 'react-transition-group/TransitionGroup';
 import TimelineApi from '../logicas/TimelineApi';
+import { connect } from 'react-redux';
 
-export default class Timeline extends Component {
+class Timeline extends Component {
 
 	constructor(props) {
 
 		super(props);
-		this.state = { fotosLista: [] };
 		this.login = this.props.login;
-	}
-
-	componentWillMount() {
-
-		this.props.store.subscribe(() => {
-
-			this.setState({ fotosLista: this.props.store.getState().timeline });
-		});
 	}
 
 	componentDidMount() {
@@ -46,36 +38,46 @@ export default class Timeline extends Component {
 			urlPerfil = `https://instalura-api.herokuapp.com//api/public/fotos/${this.login}`;
 		}
 
-		this.props.store.dispatch(TimelineApi.lista(urlPerfil));
-	}
-
-	like(fotoId) {
-
-		this.props.store.dispatch(TimelineApi.like(fotoId));
+		this.props.lista(urlPerfil);
 	}
 
 	processaComentario(fotoId, comentario) {
 
-		this.props.store.dispatch(TimelineApi.comentario(fotoId, comentario));
+		this.props.comenta(fotoId, comentario);
 	}
 
 	render() {
 		return (
 			<div className="fotos container">
-				{/* <ReactCSSTransitionGroup
-                    classNames="timeline"
-                    timeout={{ exit: 300, enter: 500 }}> */}
-
 				{
 					this.state.fotosLista.map(fotoItem => {
 
 						return (
-							<Foto key={fotoItem.id} fotoItem={fotoItem} like={this.like.bind(this)} processaComentario={this.processaComentario.bind(this)} />
+							<Foto key={fotoItem.id} fotoItem={fotoItem} like={this.props.like} processaComentario={this.props.comenta} />
 						);
 					})
 				}
-				{/* </ReactCSSTransitionGroup>+++++++++++++++ */}
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = state => {
+	return { fotos: state.timeline };
+};
+
+const mapDispatchToProps = dispatch => {
+	return {
+		like: fotoId => {
+			dispatch(TimelineApi.like(fotoId));
+		},
+		comenta: (fotoId, comentario) => {
+			dispatch(TimelineApi.comentario(fotoId, comentario));
+		},
+		lista: urlPerfil => dispatch(TimelineApi.lista(urlPerfil)),
+	};
+};
+
+const TimelineContainer = connect(mapStateToProps, mapDispatchToProps)(Timeline);
+
+export default TimelineContainer;
