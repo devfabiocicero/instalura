@@ -50,7 +50,7 @@ class Timeline extends Component {
 		return (
 			<div className="fotos container">
 				{
-					this.state.fotosLista.map(fotoItem => {
+					this.props.fotos.map(fotoItem => {
 
 						return (
 							<Foto key={fotoItem.id} fotoItem={fotoItem} like={this.props.like} processaComentario={this.props.comenta} />
